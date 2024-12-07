@@ -9,14 +9,14 @@ protocol LocationViewModelDelegate: AnyObject {
 final class LocationViewModel: ObservableObject, LocationManagerDelegate {
     @Published private(set) var currentLocation: CLLocation?
     @Published private(set) var isAuthorized: Bool = false
-
+    
     private let locationManager: LocationManager
 
     init(locationManager: LocationManager = .shared) {
         self.locationManager = locationManager
-        self.locationManager.delegate = self
         self.isAuthorized = locationManager.isAuthorized
         self.currentLocation = locationManager.currentLocation
+        self.locationManager.delegate = self
     }
 
     func requestLocationPermission() {
@@ -25,10 +25,6 @@ final class LocationViewModel: ObservableObject, LocationManagerDelegate {
 
     func startLocationUpdates() {
         locationManager.startLocationUpdates()
-    }
-
-    func stopLocationUpdates() {
-        locationManager.stopLocationUpdates()
     }
 }
 

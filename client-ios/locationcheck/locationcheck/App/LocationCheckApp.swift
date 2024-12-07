@@ -4,7 +4,7 @@ import SwiftData
 @main
 struct LocationCheckApp: App {
     private let sharedModelContainer: ModelContainer = {
-        let schema = Schema([StoredLocation.self])
+        let schema = Schema([DeviceDetails.self])
         do {
             return try ModelContainer(for: schema)
         } catch {
@@ -15,7 +15,7 @@ struct LocationCheckApp: App {
     var body: some Scene {
         WindowGroup {
             TabView {
-                ContentView(viewModel: LocationViewModel())
+                ContentView()
                     .tabItem {
                         Label("Home", systemImage: "house")
                     }

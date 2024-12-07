@@ -1,12 +1,15 @@
+//
+//  ContentView.swift
+//  locationcheck
+//
+//  Created by Feyyaz ONUR on 7.12.2024.
+//
+
 import SwiftUI
 import CoreLocation
 
 struct ContentView: View {
-    @StateObject private var viewModel: LocationViewModel
-
-    init(viewModel: LocationViewModel) {
-        _viewModel = StateObject(wrappedValue: viewModel)
-    }
+    @StateObject private var viewModel = LocationViewModel()
 
     var body: some View {
         NavigationView {

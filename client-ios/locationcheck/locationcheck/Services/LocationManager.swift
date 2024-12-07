@@ -15,6 +15,11 @@ final class LocationManager: NSObject, ObservableObject {
     @Published private(set) var currentLocation: CLLocation?
     @Published private(set) var isAuthorized: Bool = false
     
+    private var locationSaveTimer: Timer?
+    private let locationSaveInterval: TimeInterval = 30
+    
+    private var localDBRepository = LocalDBRepository()
+    
     private override init() {
         super.init()
         locationManager.delegate = self
@@ -41,10 +46,17 @@ final class LocationManager: NSObject, ObservableObject {
         locationManager.allowsBackgroundLocationUpdates = true
         locationManager.startUpdatingLocation()
         locationManager.pausesLocationUpdatesAutomatically = false
+        
+        startLocationSaveTimer()
     }
     
-    func stopLocationUpdates() {
-        locationManager.stopUpdatingLocation()
+    private func startLocationSaveTimer() {
+        locationSaveTimer?.invalidate()
+        locationSaveTimer = Timer.scheduledTimer(withTimeInterval: locationSaveInterval, repeats: true) { [weak self] _ in
+            guard let self = self, let currentLocation = self.currentLocation else { return }
+            let deviceDetails = DeviceDetails(location: currentLocation)
+            self.localDBRepository.saveDeviceDetails(deviceDetails)
+        }
     }
 }
 

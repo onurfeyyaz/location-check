@@ -1,0 +1,17 @@
+# Xcode
+xcuserdata/
+
+## App packaging
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+## Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+.build/
+backend/data
+backend/.env
+backend/node_modules
+backend/package-lock.json

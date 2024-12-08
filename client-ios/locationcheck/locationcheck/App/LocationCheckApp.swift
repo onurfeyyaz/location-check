@@ -3,6 +3,8 @@ import SwiftData
 
 @main
 struct LocationCheckApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
     private let sharedModelContainer: ModelContainer = {
         let schema = Schema([DeviceDetails.self])
         do {
@@ -11,7 +13,7 @@ struct LocationCheckApp: App {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
-
+    
     var body: some Scene {
         WindowGroup {
             TabView {
@@ -26,5 +28,19 @@ struct LocationCheckApp: App {
             }
             .modelContainer(sharedModelContainer)
         }
+    }
+}
+
+class AppDelegate: NSObject, UIApplicationDelegate {
+    func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
+    ) -> Bool {
+        
+        Task {
+            await AppLaunchManager.handleAppLaunch()
+        }
+        print("handle")
+        return true
     }
 }

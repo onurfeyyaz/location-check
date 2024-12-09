@@ -6,13 +6,30 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		DB96F0A42D02427900F7C332 /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = DB96F0A32D02427900F7C332 /* SocketIO */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		DB96F07D2D0232DD00F7C332 /* locationcheck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = locationcheck.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		DB96F0952D023CA100F7C332 /* Exceptions for "locationcheck" folder in "locationcheck" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = DB96F07C2D0232DD00F7C332 /* locationcheck */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		DB96F07F2D0232DD00F7C332 /* locationcheck */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				DB96F0952D023CA100F7C332 /* Exceptions for "locationcheck" folder in "locationcheck" target */,
+			);
 			path = locationcheck;
 			sourceTree = "<group>";
 		};
@@ -23,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DB96F0A42D02427900F7C332 /* SocketIO in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +83,7 @@
 			);
 			name = locationcheck;
 			packageProductDependencies = (
+				DB96F0A32D02427900F7C332 /* SocketIO */,
 			);
 			productName = locationcheck;
 			productReference = DB96F07D2D0232DD00F7C332 /* locationcheck.app */;
@@ -94,6 +113,9 @@
 			);
 			mainGroup = DB96F0742D0232DD00F7C332;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				DB96F0A22D02427900F7C332 /* XCRemoteSwiftPackageReference "socket" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DB96F07E2D0232DD00F7C332 /* Products */;
 			projectDirPath = "";
@@ -254,6 +276,10 @@
 				DEVELOPMENT_ASSET_PATHS = "\"locationcheck/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = locationcheck/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "We need your location to provide continuous location updates.";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "We need your location even when the app is in the background.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need your location to enhance app features.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -282,6 +308,10 @@
 				DEVELOPMENT_ASSET_PATHS = "\"locationcheck/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = locationcheck/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "We need your location to provide continuous location updates.";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "We need your location even when the app is in the background.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need your location to enhance app features.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -322,6 +352,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		DB96F0A22D02427900F7C332 /* XCRemoteSwiftPackageReference "socket" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		DB96F0A32D02427900F7C332 /* SocketIO */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DB96F0A22D02427900F7C332 /* XCRemoteSwiftPackageReference "socket" */;
+			productName = SocketIO;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = DB96F0752D0232DD00F7C332 /* Project object */;
 }

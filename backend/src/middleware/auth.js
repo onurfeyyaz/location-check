@@ -23,18 +23,26 @@ export const generateToken = (deviceId) => {
     return jwt.sign({ deviceId }, process.env.JWT_SECRET, { expiresIn: '30d' });
 };
 
-export const verifySocketToken = (socket, next) => {
-    const token = socket.handshake.auth.token;
+export const verifySocketToken = (token) => {
+    return new Promise((resolve, reject) => {
+        if (!token) {
+            reject(new Error('No token provided'));
+        }
 
-    if (!token) {
-        return next(new Error('Authentication error'));
-    }
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            resolve(decoded);
+        } catch (err) {
+            reject(new Error('Invalid token'));
+        }
+    });
+};
 
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        socket.deviceId = decoded.deviceId;
-        next();
-    } catch (err) {
-        next(new Error('Authentication error'));
-    }
+export const verifySocketEvent = (socket, eventName, data) => {
+    return new Promise((resolve, reject) => {
+        if (!socket.isAuthenticated) {
+            reject(new Error('Not authenticated'));
+        }
+        resolve(data);
+    });
 }; 

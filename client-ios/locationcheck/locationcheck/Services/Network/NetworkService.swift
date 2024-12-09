@@ -38,39 +38,35 @@ final class NetworkService {
         urlRequest.httpMethod = request.method.rawValue
         urlRequest.allHTTPHeaderFields = request.headers
         
-        if let token = token {
+        if let token {
             urlRequest.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
         
         urlRequest.httpBody = request.body
         
-        let (data, response) = try await session.data(for: urlRequest)
-        
-        guard let httpResponse = response as? HTTPURLResponse,
-              (200...299).contains(httpResponse.statusCode) else {
-            throw NetworkError.serverError((response as? HTTPURLResponse)?.statusCode ?? -1)
-        }
+        print("Sending request to \(urlRequest.url?.absoluteString ?? "")")
+        print("Headers: \(urlRequest.allHTTPHeaderFields?.filter { $0.key != "Authorization" } ?? [:])")
         
         do {
-            let decodedResponse = try JSONDecoder().decode(T.Response.self, from: data)
+            let (data, response) = try await session.data(for: urlRequest)
             
-            if let tokenResponse = decodedResponse as? DeviceInfoResponse {
-                if let newToken = tokenResponse.token {
-                    let isSaved = KeychainService.shared.save(key: "authToken", value: newToken)
-                    if isSaved {
-                        print("Token saved securely!")
-                    } else {
-                        print("Failed to save the token!")
-                    }
-                }
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                print("Server responded with status code: \((response as? HTTPURLResponse)?.statusCode ?? -1)")
+                throw NetworkError.serverError((response as? HTTPURLResponse)?.statusCode ?? -1)
             }
             
-            print("Sending request to \(urlRequest.url?.absoluteString ?? "")")
-            print("Headers: \(urlRequest.allHTTPHeaderFields?.filter { $0.key != "Authorization" } ?? [:])")
-
-            return decodedResponse
+            do {
+                let decodedResponse = try JSONDecoder().decode(T.Response.self, from: data)
+                return decodedResponse
+            } catch {
+                print("Decoding error: \(error)")
+                print("Raw response data: \(String(data: data, encoding: .utf8) ?? "nil")")
+                throw NetworkError.decodingError(error)
+            }
         } catch {
-            throw NetworkError.decodingError(error)
+            print("Network error: \(error.localizedDescription)")
+            throw NetworkError.networkFailure(error)
         }
     }
 }

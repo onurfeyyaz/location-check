@@ -10,6 +10,11 @@ import Foundation
 enum Constants {
     enum API {
         static let baseURL = "http://localhost:3000"
-        static let registerEndpoint = "api/device/register"
+        enum Endpoint {
+            static let register = "api/device/register"
+            static let info = "api/device/info"
+            static let notification = "/api/device/location-notification"
+            static let locations = "/api/device/locations/"
+        }
     }
 }

@@ -26,7 +26,7 @@ final class AppLaunchManager {
     
     private static func sendDeviceInfoIfNeeded() async {
         do {
-            let request = DeviceInfoRequest(payload: DeviceInfo.current())
+            let request = DeviceInfoRequest()
             try await NetworkService.shared.send(request)
             print("Device info sent successfully.")
         } catch {

@@ -2,6 +2,7 @@ import CoreLocation
 import SwiftData
 import UIKit
 
+
 @Model
 class DeviceDetails: Codable {
     @Attribute(.unique) var id: UUID
@@ -38,6 +39,14 @@ class DeviceDetails: Codable {
         
         let infoDictionary = Bundle.main.infoDictionary
         self.appVersion = "\(infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown") (\(infoDictionary?["CFBundleVersion"] as? String ?? "Unknown"))"
+    }
+    
+    func toDictionary() -> [String: Any]? {
+        guard let jsonData = try? JSONEncoder().encode(self),
+              let dictionary = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any] else {
+            return nil
+        }
+        return dictionary
     }
     
     enum CodingKeys: String, CodingKey {
@@ -78,3 +87,4 @@ class DeviceDetails: Codable {
         try container.encode(appVersion, forKey: .appVersion)
     }
 }
+

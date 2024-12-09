@@ -8,16 +8,16 @@
 import Foundation
 
 struct DeviceInfoRequest: APIRequest {
-    private let payload: DeviceInfo
+    typealias Response = DeviceTokenResponse
     
-    init(payload: DeviceInfo) {
+    private let payload: String
+    
+    init(payload: String = "\(DeviceInfo.current().deviceId)") {
         self.payload = payload
     }
     
-    typealias Response = DeviceInfoResponse
-    
     var baseURL: URL { URL(string: Constants.API.baseURL)! }
-    var path: String { Constants.API.registerEndpoint }
+    var path: String { Constants.API.Endpoint.notification }
     var method: HTTPMethod { .POST }
     var headers: [String: String]? { ["Content-Type": "application/json"] }
     var body: Data? {
@@ -26,6 +26,6 @@ struct DeviceInfoRequest: APIRequest {
     var queryParameters: [String: String]? { nil }
 }
 
-struct DeviceInfoResponse: Decodable {
+struct DeviceTokenResponse: Decodable {
     let token: String?
 }

@@ -16,14 +16,18 @@ final class LocationManager: NSObject, ObservableObject {
     @Published private(set) var isAuthorized: Bool = false
     
     private var locationSaveTimer: Timer?
-    private let locationSaveInterval: TimeInterval = 30
+    private let locationSaveInterval: TimeInterval = 600
     
     private var localDBRepository = LocalDBRepository()
+    private var socketRepository = SocketRepository()
     
     private override init() {
         super.init()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.allowsBackgroundLocationUpdates = true
+        locationManager.pausesLocationUpdatesAutomatically = false
+        locationManager.activityType = .other
     }
     
     func requestLocationPermission() {
@@ -43,19 +47,24 @@ final class LocationManager: NSObject, ObservableObject {
     }
     
     func startLocationUpdates() {
-        locationManager.allowsBackgroundLocationUpdates = true
         locationManager.startUpdatingLocation()
-        locationManager.pausesLocationUpdatesAutomatically = false
         
         startLocationSaveTimer()
     }
     
     private func startLocationSaveTimer() {
         locationSaveTimer?.invalidate()
+        
         locationSaveTimer = Timer.scheduledTimer(withTimeInterval: locationSaveInterval, repeats: true) { [weak self] _ in
             guard let self = self, let currentLocation = self.currentLocation else { return }
+            
             let deviceDetails = DeviceDetails(location: currentLocation)
+            
             self.localDBRepository.saveDeviceDetails(deviceDetails)
+            
+            Task {
+                await self.socketRepository.sendDeviceDetails(deviceDetails)
+            }
         }
     }
 }

@@ -10,45 +10,53 @@ import CoreLocation
 
 struct ContentView: View {
     @StateObject private var viewModel = LocationViewModel()
-
+    
     var body: some View {
         NavigationView {
             VStack(spacing: 20) {
-                if !viewModel.isAuthorized {
-                    VStack {
-                        Text("Location Access Required")
-                            .font(.headline)
-                        Text("Please enable location access to track your position")
-                            .multilineTextAlignment(.center)
-                            .padding(.bottom, 10)
-                        Button("Enable Location Access") {
-                            viewModel.requestLocationPermission()
-                        }
-                        .buttonStyle(.borderedProminent)
+                ScrollView {
+                    if let error = viewModel.connectionError {
+                        ConnectionErrorView(message: error)
                     }
-                    .padding()
-                } else if let location = viewModel.currentLocation {
-                    LocationInfoView(location: location)
-                } else {
-                    VStack {
-                        ProgressView("Fetching Location...")
-                        Text("Please wait while we retrieve your location.")
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                            .padding(.top, 5)
+                    
+                    if !viewModel.isAuthorized {
+                        LocationPermissionView(viewModel: viewModel)
+                            .padding(.top, 30)
+                    } else {
+                        VStack(spacing: 20) {
+                            if let deviceInfo = viewModel.deviceInfo {
+                                DeviceInfoView(deviceInfo: deviceInfo)
+                            }
+                            if let location = viewModel.currentLocation {
+                                LocationInfoView(location: location)
+                            }
+                        }
+                        .padding()
                     }
                 }
-            }
-            .padding()
-            .navigationTitle("Location Tracker")
-            .onAppear {
-                viewModel.startLocationUpdates()
-            }
-            .onChange(of: viewModel.isAuthorized) {
-                if viewModel.isAuthorized {
-                    viewModel.startLocationUpdates()
+                .navigationTitle("Location Tracker")
+                .onAppear {
+                    if viewModel.isAuthorized {
+                        viewModel.startLocationUpdates()
+                    }
                 }
             }
         }
+    }
+}
+
+struct ConnectionErrorView: View {
+    let message: String
+    
+    var body: some View {
+        HStack {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .foregroundColor(.yellow)
+            Text(message)
+                .font(.subheadline)
+        }
+        .padding()
+        .background(Color.yellow.opacity(0.2))
+        .cornerRadius(8)
     }
 }

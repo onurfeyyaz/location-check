@@ -40,7 +40,15 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         Task {
             await AppLaunchManager.handleAppLaunch()
         }
-        print("handle")
+        
+        if let locationOptions = launchOptions?[.location] {
+            print("App relaunched due to location updates")
+            LocationManager.shared.startLocationUpdates()
+        }
         return true
+    }
+    
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        DeviceDataManager.shared.connect()
     }
 }

@@ -8,13 +8,12 @@ struct LocationInfoView: View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Current Location")
                 .font(.headline)
-            
             Group {
-                Text("Latitude: \(location.coordinate.latitude, specifier: "%.4f")")
-                Text("Longitude: \(location.coordinate.longitude, specifier: "%.4f")")
-                Text("Altitude: \(location.altitude, specifier: "%.1f")m")
-                Text("Accuracy: ±\(location.horizontalAccuracy, specifier: "%.1f")m")
-                Text("Updated: \(location.timestamp, style: .time)")
+                InfoRow(title: "Latitude", value: "\(location.coordinate.latitude)")
+                InfoRow(title: "Longitude", value: "\(location.coordinate.longitude)")
+                InfoRow(title: "Altitude", value: "\(location.altitude)m")
+                InfoRow(title: "Accuracy", value:  "±\(location.horizontalAccuracy)m")
+                InfoRow(title: "Updated", value: "\(location.timestamp)")
             }
             .font(.subheadline)
             .foregroundColor(.secondary)

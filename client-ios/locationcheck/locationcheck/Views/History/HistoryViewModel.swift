@@ -1,30 +1,48 @@
-//
-//  HistoryViewModel.swift
-//  locationcheck
-//
-//  Created by Feyyaz ONUR on 7.12.2024.
-//
-
 import Foundation
 
 final class HistoryViewModel: ObservableObject {
-    @Published var deviceDetails: [DeviceDetails] = []
-    private let repository: LocalDBRepository
+    @Published var deviceDetails: [LocationData] = []
+    @Published var isLoading: Bool = false
+    private var isDataLoaded: Bool = false
     
-    init(repository: LocalDBRepository) {
-        self.repository = repository
-        self.deviceDetails = getDeviceDetails()
+    private let localRepository: LocalDBRepository
+    private let socketRepository: SocketRepository
+    
+    init(localRepository: LocalDBRepository = LocalDBRepository(), socketRepository: SocketRepository = SocketRepository()) {
+        self.localRepository = localRepository
+        self.socketRepository = socketRepository
     }
     
-    func getDeviceDetails() -> [DeviceDetails] {
-        var devices = repository.getDeviceDetails()
-        devices.sort { $0.timestamp > $1.timestamp }
-        return devices
+    func loadInitialData() async {
+        guard !isDataLoaded else { return }
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.isLoading = true
+        }
+        
+        let fetchedData = await socketRepository.getAllDevicesDetails()
+    
+        let sortedData = fetchedData.sorted { $0.timestamp > $1.timestamp }
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.deviceDetails = sortedData
+            self?.isLoading = false
+        }
+        
+        isDataLoaded = true
     }
     
     func reloadData() async {
-        DispatchQueue.main.async {
-            self.deviceDetails = self.getDeviceDetails()
+        DispatchQueue.main.async { [weak self] in
+            self?.isLoading = true
+        }
+        let fetchedData = await socketRepository.getAllDevicesDetails()
+        
+        let sortedData = fetchedData.sorted { $0.timestamp > $1.timestamp }
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.deviceDetails = sortedData
+            self?.isLoading = false
         }
     }
 }

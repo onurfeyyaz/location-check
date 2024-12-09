@@ -16,13 +16,26 @@ final class KeychainService {
 
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: key,
-            kSecValueData as String: data
+            kSecAttrAccount as String: key
         ]
+        
+        var existingItem: CFTypeRef?
+        let status = SecItemCopyMatching(query as CFDictionary, &existingItem)
 
-        SecItemDelete(query as CFDictionary)
-
-        return SecItemAdd(query as CFDictionary, nil) == errSecSuccess
+        if status == errSecSuccess {
+            let attributesToUpdate: [String: Any] = [
+                kSecValueData as String: data
+            ]
+            let updateStatus = SecItemUpdate(query as CFDictionary, attributesToUpdate as CFDictionary)
+            return updateStatus == errSecSuccess
+        } else {
+            let addQuery: [String: Any] = [
+                kSecClass as String: kSecClassGenericPassword,
+                kSecAttrAccount as String: key,
+                kSecValueData as String: data
+            ]
+            return SecItemAdd(addQuery as CFDictionary, nil) == errSecSuccess
+        }
     }
 
     func retrieve(key: String) -> String? {
@@ -41,14 +54,5 @@ final class KeychainService {
         }
 
         return nil
-    }
-
-    func delete(key: String) -> Bool {
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: key
-        ]
-
-        return SecItemDelete(query as CFDictionary) == errSecSuccess
     }
 }

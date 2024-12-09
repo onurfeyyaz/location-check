@@ -62,14 +62,7 @@ struct ErrorResponse: Codable {
 
 struct TimeIntervalResponse: Codable {
     let success: Bool
-    let message: String
-    let data: TimeIntervalData
-}
-
-struct TimeIntervalData: Codable {
-    let interval: Int
-    let enabled: Bool
-    let timestamp: String
+    let data: Int
 }
 
 enum SocketError: Error {

@@ -17,7 +17,20 @@ final class SocketRepository {
     }
 }
 
-extension SocketRepository: DeviceDataManagerProtocol {
+extension SocketRepository {    
+    func fetchTimeInterval() {
+        deviceDataManager.fetchTimeInterval()
+    }
+    
+    private func observeTimeIntervalSocket() -> Double {
+        var timeInterval: Double?
+        deviceDataManager.registerServerDataHandler { success, time in
+            timeInterval = time
+        }
+        
+        return timeInterval ?? 1.0
+    }
+    
     func sendDeviceDetails(_ deviceDetails: DeviceDetails) async {
         /// for websocket
         //deviceDataManager.sendDeviceDetails(deviceDetails)

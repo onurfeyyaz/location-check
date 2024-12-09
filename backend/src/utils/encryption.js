@@ -8,7 +8,7 @@ const IV_LENGTH = 16;
 const SALT_LENGTH = 64;
 const TAG_LENGTH = 16;
 const KEY_LENGTH = 32;
-const ENCRYPTION_KEY = process.env.JWT_SECRET; // Using JWT_SECRET as encryption key
+const ENCRYPTION_KEY = process.env.JWT_SECRET;
 
 function getKey(salt) {
     return crypto.pbkdf2Sync(ENCRYPTION_KEY, salt, 100000, KEY_LENGTH, 'sha512');

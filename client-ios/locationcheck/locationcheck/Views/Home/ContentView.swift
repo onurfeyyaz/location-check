@@ -33,6 +33,10 @@ struct ContentView: View {
                         }
                         .padding()
                     }
+                    Button("Fetch Time Interval") {
+                        viewModel.fetchTimeInterval()
+                    }
+                    .buttonStyle(.borderedProminent)
                 }
                 .navigationTitle("Location Tracker")
                 .onAppear {

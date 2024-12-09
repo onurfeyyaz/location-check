@@ -28,46 +28,33 @@ final class LocationViewModel: ObservableObject, LocationManagerDelegate {
         
         startLocationUpdates()
         setupSocketListeners()
+        
+        fetchTimeInterval()
     }
     
     private func setupSocketListeners() {
-        deviceDataManager.onDataReceived = { [weak self] response in
-            DispatchQueue.main.async {
-                print("response message: \(response.message)")
-                print("response locationData: \(response.data.location)")
-                self?.connectionError = nil
-            }
-        }
-        
+        /*
         deviceDataManager.onError = { [weak self] error in
             DispatchQueue.main.async {
                 self?.connectionError = error
             }
         }
+         */
     }
     
-    func getTime() {
-        DispatchQueue.main.async { [weak self] in
-            self?.isLoading = true
-        }
+    func fetchTimeInterval() {
+        deviceDataManager.connectSocket()
         
-        deviceDataManager.requestTimeInterval(deviceId: deviceInfo?.deviceId ?? UUID().uuidString) { [weak self] result in
-            DispatchQueue.main.async {
-                self?.isLoading = false
-                
-                switch result {
-                case .success(let response):
-                    if response.success {
-                        print("Time interval:", response.data.interval)
-                        print("Enabled:", response.data.enabled)
-                    } else {
-                        self?.connectionError = response.message
-                    }
-                case .failure(let error):
-                    self?.connectionError = error.localizedDescription
-                }
-            }
+        deviceDataManager.fetchTimeInterval()
+        setTimeInterval()
+    }
+    
+    func setTimeInterval() {
+        var timeIntervalLocation: Double?
+        deviceDataManager.registerServerDataHandler { success, time in
+            timeIntervalLocation = time
         }
+        locationManager.locationSaveInterval = timeIntervalLocation
     }
     
     func requestLocationPermission() {
@@ -85,7 +72,7 @@ extension LocationViewModel: LocationViewModelDelegate {
             self?.currentLocation = location
             
             let deviceDetails = DeviceDetails(location: location)
-            self?.deviceDataManager.sendDeviceDetails(deviceDetails)
+            //self?.deviceDataManager.sendDeviceDetails(deviceDetails)
         }
     }
     

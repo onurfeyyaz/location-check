@@ -15,27 +15,12 @@ export const verifyToken = (req, res, next) => {
         req.deviceId = decoded.deviceId;
         next();
     } catch (err) {
-        return res.status(401).json({ message: 'Invalid token' });
+        return res.status(401).json({ message: 'auth: Invalid token' });
     }
 };
 
 export const generateToken = (deviceId) => {
     return jwt.sign({ deviceId }, process.env.JWT_SECRET, { expiresIn: '30d' });
-};
-
-export const verifySocketToken = (token) => {
-    return new Promise((resolve, reject) => {
-        if (!token) {
-            reject(new Error('No token provided'));
-        }
-
-        try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            resolve(decoded);
-        } catch (err) {
-            reject(new Error('Invalid token'));
-        }
-    });
 };
 
 export const verifySocketEvent = (socket, eventName, data) => {

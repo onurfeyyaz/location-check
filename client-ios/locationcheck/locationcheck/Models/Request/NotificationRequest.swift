@@ -1,5 +1,5 @@
 //
-//  DeviceInfoRequest.swift
+//  NotificationRequest.swift
 //  locationcheck
 //
 //  Created by Feyyaz ONUR on 8.12.2024.
@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct DeviceInfoRequest: APIRequest {
-    typealias Response = DeviceTokenResponse
+struct NotificationRequest: APIRequest {
+    typealias Response = NotificationPayload
     
     private let payload: DeviceInfo
     
@@ -24,8 +24,4 @@ struct DeviceInfoRequest: APIRequest {
         try? JSONEncoder().encode(payload)
     }
     var queryParameters: [String: String]? { nil }
-}
-
-struct DeviceTokenResponse: Decodable {
-    let token: String?
 }

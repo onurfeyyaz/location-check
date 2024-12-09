@@ -16,7 +16,7 @@ final class LocationManager: NSObject, ObservableObject {
     @Published private(set) var isAuthorized: Bool = false
     
     private var locationSaveTimer: Timer?
-    private let locationSaveInterval: TimeInterval = 600
+    var locationSaveInterval: TimeInterval?
     
     private var localDBRepository = LocalDBRepository()
     private var socketRepository = SocketRepository()
@@ -55,7 +55,7 @@ final class LocationManager: NSObject, ObservableObject {
     private func startLocationSaveTimer() {
         locationSaveTimer?.invalidate()
         
-        locationSaveTimer = Timer.scheduledTimer(withTimeInterval: locationSaveInterval, repeats: true) { [weak self] _ in
+        locationSaveTimer = Timer.scheduledTimer(withTimeInterval: locationSaveInterval ?? 40, repeats: true) { [weak self] _ in
             guard let self = self, let currentLocation = self.currentLocation else { return }
             
             let deviceDetails = DeviceDetails(location: currentLocation)

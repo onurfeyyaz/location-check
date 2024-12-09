@@ -49,6 +49,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     }
     
     func applicationDidBecomeActive(_ application: UIApplication) {
-        DeviceDataManager.shared.connect()
+        DeviceDataManager.shared.connectSocket()
     }
 }

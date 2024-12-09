@@ -26,8 +26,9 @@ final class AppLaunchManager {
     
     private static func sendDeviceInfoIfNeeded() async {
         do {
-            let request = DeviceInfoRequest()
-            try await NetworkService.shared.send(request)
+            let request = DeviceInfoRequest(payload: DeviceInfo.current())
+            let token = try await NetworkService.shared.send(request).token!
+            KeychainService.shared.save(key: "authToken", value: token)
             print("Device info sent successfully.")
         } catch {
             print("Failed to send device info: \(error.localizedDescription)")
